@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Направление А — Дневник</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" />
+<style>
+  /* Тренировочный дневник: бумага в клетку, синяя шариковая ручка, красная — для пометок тренера */
+  :root {
+    --paper: #f7f9fc;
+    --grid: #dde5f1;
+    --ink: #1d3a8f;
+    --pencil: #5d6677;
+    --red-pen: #cf2e2e;
+    --marker: #fff27a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); font: 16px/1.45 "Golos Text", system-ui, sans-serif;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  main { max-width: 440px; margin: 0 auto; padding: 16px 16px 40px; }
+
+  .tabs { display: flex; gap: 20px; border-bottom: 2px solid var(--ink); }
+  .tab {
+    padding: 10px 0 8px; min-height: 44px; border: 0; background: none; cursor: pointer;
+    font: 600 17px "Golos Text", sans-serif; color: var(--pencil);
+  }
+  .tab[aria-pressed="true"] { color: var(--ink); box-shadow: inset 0 -4px 0 var(--ink); }
+  .tab small { font-weight: 500; font-size: 14px; }
+
+  h1 { margin: 22px 0 2px; font-size: 30px; line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; }
+  .date { margin: 0; color: var(--pencil); font-size: 15px; }
+
+  /* Пометка красной ручкой — единственный «громкий» элемент */
+  .note {
+    position: relative; margin: 22px 0 6px; padding: 14px 16px 16px;
+    border: 2.5px solid var(--red-pen); border-radius: 18px 26px 20px 30px / 26px 18px 30px 20px;
+    transform: rotate(-0.6deg); background: rgba(255, 255, 255, 0.55);
+  }
+  .note__hand { font: 700 26px/1.1 Caveat, cursive; color: var(--red-pen); margin: 0 0 6px; }
+  .note ul { list-style: none; margin: 0; padding: 0; }
+  .note li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 15.5px; }
+  .note li + li { border-top: 1px dashed rgba(207, 46, 46, 0.35); }
+  .note b { font-weight: 600; color: var(--ink); }
+  .note span { color: var(--red-pen); white-space: nowrap; }
+
+  .filters { display: flex; gap: 16px; margin: 22px 0 4px; font-size: 15px; }
+  .filters button { min-height: 44px; border: 0; background: none; padding: 0; color: var(--pencil); font: inherit; cursor: pointer; }
+  .filters button[aria-pressed="true"] { color: var(--ink); font-weight: 600; background: linear-gradient(transparent 55%, var(--marker) 55%, var(--marker) 90%, transparent 90%); }
+
+  .log { list-style: none; margin: 0; padding: 0; }
+  .entry {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: baseline;
+    padding: 12px 0; border-bottom: 1px solid var(--grid); min-height: 72px;
+  }
+  .entry__name { font-size: 17px; font-weight: 600; }
+  .entry__when { color: var(--pencil); font-size: 14px; text-align: right; }
+  .entry__lift { color: var(--pencil); font-size: 15px; }
+  .entry__lift b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .entry__status { font-size: 14px; text-align: right; white-space: nowrap; }
+  .entry[data-status="risk"] .entry__status { color: var(--red-pen); font-weight: 600; }
+  .entry[data-status="risk"] .entry__name { text-decoration: underline wavy var(--red-pen); text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+  .entry[data-status="warning"] .entry__status { color: #9a5b00; font-weight: 600; }
+  .entry[data-status="active"] .entry__status { color: var(--pencil); }
+  button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="tabs" role="group" aria-label="Раздел">
+    <button class="tab" type="button" aria-pressed="true">Клиенты <small>8</small></button>
+    <button class="tab" type="button" aria-pressed="false">Спортсмены</button>
+  </div>
+
+  <h1>Клиенты</h1>
+  <p class="date">Суббота, 17 октября</p>
+
+  <section class="note" aria-label="Кому написать">
+    <p class="note__hand">Написать сегодня!</p>
+    <ul id="nudges"></ul>
+  </section>
+
+  <div class="filters" role="group" aria-label="Фильтр">
+    <button type="button" aria-pressed="true">Все</button>
+    <button type="button" aria-pressed="false">Риск</button>
+    <button type="button" aria-pressed="false">Пропуски</button>
+    <button type="button" aria-pressed="false">Активны</button>
+  </div>
+
+  <ul class="log" id="log"></ul>
+</main>
+<script>
+  const CLIENTS = [
+    ["Екатерина Власова", "risk", 12, 4, 62.5], ["Артём Беляев", "risk", 9, 3, 107.5],
+    ["Дмитрий Орлов", "warning", 5, 2, 87.5], ["Павел Новиков", "warning", 4, 2, 77.5],
+    ["Мария Козлова", "active", 3, 0, 50], ["Игорь Лебедев", "active", 2, 0, 105],
+    ["Анна Смирнова", "active", 1, 0, 67.5], ["Олеся Романова", "active", 1, 0, 60],
+  ];
+  const kg = (n) => String(n).replace(".", ",");
+  const days = (n) => (n === 1 ? "вчера" : n + " " + (n % 10 >= 2 && n % 10 <= 4 && (n < 10 || n > 20) ? "дня" : n % 10 === 1 && n !== 11 ? "день" : "дней") + " назад");
+  const status = (s, m) => (s === "risk" ? "риск ухода" : s === "warning" ? m + " пропуска" : "в графике");
+  document.getElementById("nudges").innerHTML = CLIENTS.filter((c) => c[2] >= 5)
+    .map((c) => `<li><b>${c[0]}</b><span>${c[2]} дн. тишины</span></li>`).join("");
+  document.getElementById("log").innerHTML = CLIENTS.map((c) => `
+    <li class="entry" data-status="${c[1]}">
+      <span class="entry__name">${c[0]}</span><span class="entry__when">${days(c[2])}</span>
+      <span class="entry__lift">Присед <b>${kg(c[4])} кг</b></span><span class="entry__status">${status(c[1], c[3])}</span>
+    </li>`).join("");
+</script>
+</body>
+</html>

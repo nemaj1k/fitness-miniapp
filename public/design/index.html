@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Logbook Coach — варианты дизайна</title>
+<style>
+  :root { --page: #e4e6ea; --text: #15181d; --muted: #5b6370; --frame: #1d1f24; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font: 15px/1.45 system-ui, -apple-system, Roboto, sans-serif; }
+  header { max-width: 1320px; margin: 0 auto; padding: 24px 16px 8px; }
+  h1 { margin: 0 0 6px; font-size: 22px; }
+  header p { margin: 0; color: var(--muted); max-width: 70ch; }
+  .grid { max-width: 1320px; margin: 0 auto; padding: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 28px; }
+  figure { margin: 0; display: flex; flex-direction: column; align-items: center; }
+  .phone { width: 100%; max-width: 410px; aspect-ratio: 410 / 860; padding: 10px; border-radius: 54px; background: var(--frame); box-shadow: 0 24px 50px rgba(0,0,0,.22); }
+  .screen { position: relative; height: 100%; border-radius: 44px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+  .island { position: absolute; top: 10px; left: 50%; width: 110px; height: 32px; margin-left: -55px; border-radius: 18px; background: #000; z-index: 2; }
+  .tg { flex: none; height: 92px; padding: 54px 16px 0; display: grid; grid-template-columns: 1fr auto 1fr; font-size: 16px; background: #fff; border-bottom: 0.5px solid rgba(0,0,0,.12); }
+  .tg span:first-child { color: #007aff; }
+  .tg b { font-weight: 600; }
+  iframe { flex: 1; width: 100%; border: 0; }
+  figcaption { max-width: 410px; margin-top: 16px; }
+  figcaption h2 { margin: 0 0 4px; font-size: 18px; }
+  figcaption p { margin: 0 0 6px; color: var(--muted); }
+  figcaption a { color: #1e5bc6; font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Три направления дизайна для экрана «Клиенты»</h1>
+  <p>Данные вымышленные, кнопки не работают — это только внешний вид. Вкладка «Спортсмены» пока пустая: её содержание сделаем по вашим таблицам. Выберите направление (или что взять из каждого) — по нему переделаю всё приложение.</p>
+</header>
+<div class="grid">
+  <figure>
+    <div class="phone"><div class="screen"><div class="island"></div><div class="tg"><span>Закрыть</span><b>Logbook Coach</b><span></span></div><iframe src="a-diary.html" title="Направление А"></iframe></div></div>
+    <figcaption>
+      <h2>А. Дневник</h2>
+      <p>Тетрадь тренера: бумага в клетку, синяя ручка. Кому пора написать — обведено красной ручкой, клиенты в риске подчёркнуты волной. Тёплое, «ручное», не похоже на типовое приложение.</p>
+      <a href="a-diary.html" target="_blank" rel="noopener">Открыть отдельно</a>
+    </figcaption>
+  </figure>
+  <figure>
+    <div class="phone"><div class="screen"><div class="island"></div><div class="tg"><span>Закрыть</span><b>Logbook Coach</b><span></span></div><iframe src="b-platform.html" title="Направление Б"></iframe></div></div>
+    <figcaption>
+      <h2>Б. Помост</h2>
+      <p>Язык зала: цвета олимпийских блинов, узкий спортивный шрифт для цифр. Рабочий вес каждого клиента нарисован блинами на грифе — сразу видно, кто сколько поднимает. Клиенты сгруппированы по статусу.</p>
+      <a href="b-platform.html" target="_blank" rel="noopener">Открыть отдельно</a>
+    </figcaption>
+  </figure>
+  <figure>
+    <div class="phone"><div class="screen"><div class="island"></div><div class="tg"><span>Закрыть</span><b>Logbook Coach</b><span></span></div><iframe src="c-native.html" title="Направление В"></iframe></div></div>
+    <figcaption>
+      <h2>В. Как в Telegram</h2>
+      <p>Выглядит как часть самого Telegram: его цвета и шрифт, списки как в настройках, сами подстраиваются под тему. Главное сверху — одна фраза, кому написать сегодня; имя нажимается.</p>
+      <a href="c-native.html" target="_blank" rel="noopener">Открыть отдельно</a>
+    </figcaption>
+  </figure>
+</div>
+</body>
+</html>

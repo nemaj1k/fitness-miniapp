@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Направление Б — Помост</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" />
+<style>
+  /* Помост: цвета олимпийских блинов (25 красный, 20 синий, 15 жёлтый, 10 зелёный),
+     сталь грифа, светлый резиновый пол. Рабочий вес нарисован блинами на грифе. */
+  :root {
+    --floor: #eceeef;
+    --surface: #ffffff;
+    --steel: #2f343b;
+    --steel-soft: #6c737d;
+    --line: #d5d9de;
+    --p25: #d7262e; --p20: #1e5bc6; --p15: #f2b705; --p10: #1f9d55; --p5: #f4f4f2; --p2: #2b2b2b; --p1: #b7bcc3;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--floor); color: var(--steel); font: 15px/1.4 "IBM Plex Sans", system-ui, sans-serif; }
+  main { max-width: 440px; margin: 0 auto; padding: 14px 16px 40px; }
+
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; background: var(--steel); border-radius: 12px; padding: 4px; }
+  .tab {
+    min-height: 44px; border: 0; border-radius: 9px; background: transparent; color: #c9ced4; cursor: pointer;
+    font: 600 16px Oswald, sans-serif; letter-spacing: 0.02em;
+  }
+  .tab[aria-pressed="true"] { background: var(--surface); color: var(--steel); }
+
+  .head { display: flex; align-items: flex-end; justify-content: space-between; margin: 20px 0 12px; }
+  h1 { margin: 0; font: 700 40px/0.95 Oswald, sans-serif; letter-spacing: -0.01em; }
+  .head p { margin: 0 0 4px; color: var(--steel-soft); text-align: right; font-size: 14px; }
+
+  .alert { display: grid; grid-template-columns: 8px 1fr; gap: 12px; background: var(--surface); border-radius: 14px; padding: 14px 14px 14px 0; overflow: hidden; }
+  .alert::before { content: ""; background: var(--p25); border-radius: 0 4px 4px 0; }
+  .alert h2 { margin: 0 0 4px; font: 600 18px Oswald, sans-serif; }
+  .alert p { margin: 0; color: var(--steel-soft); }
+  .alert b { color: var(--steel); font-weight: 600; }
+
+  .group { margin: 22px 0 8px; display: flex; align-items: baseline; gap: 8px; font: 600 17px Oswald, sans-serif; }
+  .group span { color: var(--steel-soft); font: 500 14px "IBM Plex Sans", sans-serif; }
+
+  .list { list-style: none; margin: 0; padding: 0; background: var(--surface); border-radius: 14px; overflow: hidden; }
+  .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 14px; min-height: 76px; align-items: center; }
+  .row + .row { border-top: 1px solid var(--line); }
+  .row__name { font-weight: 600; font-size: 16px; }
+  .row__meta { grid-column: 1; color: var(--steel-soft); font-size: 13.5px; }
+  .row__weight { grid-row: 1 / span 2; grid-column: 2; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .row__kg { font: 600 22px/1 Oswald, sans-serif; font-variant-numeric: tabular-nums; }
+  .row__kg small { font: 500 12px "IBM Plex Sans", sans-serif; color: var(--steel-soft); margin-left: 2px; }
+
+  /* Гриф с блинами одной стороны: высота блина зависит от веса, как в зале */
+  .bar { display: flex; align-items: center; height: 40px; }
+  .bar__shaft { width: 26px; height: 5px; background: var(--p1); border-radius: 2px 0 0 2px; }
+  .bar__sleeve { width: 14px; height: 8px; background: var(--p1); border-radius: 0 2px 2px 0; }
+  .plate { width: 9px; margin-right: 1.5px; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); }
+  .plate[data-kg="25"] { height: 40px; background: var(--p25); }
+  .plate[data-kg="20"] { height: 40px; background: var(--p20); }
+  .plate[data-kg="15"] { height: 34px; background: var(--p15); }
+  .plate[data-kg="10"] { height: 28px; background: var(--p10); }
+  .plate[data-kg="5"] { height: 20px; background: var(--p5); }
+  .plate[data-kg="2.5"] { height: 16px; background: var(--p2); }
+  .plate[data-kg="1.25"] { height: 13px; background: var(--p1); }
+  .bar__collar { width: 5px; height: 14px; background: var(--steel); border-radius: 1px; }
+  button:focus-visible { outline: 2px solid var(--p20); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="tabs" role="group" aria-label="Раздел">
+    <button class="tab" type="button" aria-pressed="true">Клиенты</button>
+    <button class="tab" type="button" aria-pressed="false">Спортсмены</button>
+  </div>
+
+  <div class="head">
+    <h1>Клиенты</h1>
+    <p>Сб, 17 октября<br />8 человек</p>
+  </div>
+
+  <section class="alert" aria-label="Кому написать">
+    <div>
+      <h2>Написать троим</h2>
+      <p><b>Екатерина В.</b> 12 дней без записей, <b>Артём Б.</b> 9, <b>Дмитрий О.</b> 5.</p>
+    </div>
+  </section>
+
+  <div id="groups"></div>
+</main>
+<script>
+  const CLIENTS = [
+    ["Екатерина Власова", "risk", 12, 4, 62.5], ["Артём Беляев", "risk", 9, 3, 107.5],
+    ["Дмитрий Орлов", "warning", 5, 2, 87.5], ["Павел Новиков", "warning", 4, 2, 77.5],
+    ["Мария Козлова", "active", 3, 0, 50], ["Игорь Лебедев", "active", 2, 0, 105],
+    ["Анна Смирнова", "active", 1, 0, 67.5], ["Олеся Романова", "active", 1, 0, 60],
+  ];
+  const GROUPS = [["risk", "Риск ухода"], ["warning", "Пропускают"], ["active", "В графике"]];
+  // Блины на одну сторону грифа 20 кг
+  function plates(total) {
+    let side = (total - 20) / 2; const out = [];
+    for (const p of [25, 20, 15, 10, 5, 2.5, 1.25]) while (side >= p - 1e-9) { out.push(p); side -= p; }
+    return out;
+  }
+  const kg = (n) => String(n).replace(".", ",");
+  const ago = (d) => (d === 1 ? "вчера" : d + " дн. назад");
+  document.getElementById("groups").innerHTML = GROUPS.map(([id, title]) => {
+    const rows = CLIENTS.filter((c) => c[1] === id);
+    return `<div class="group">${title}<span>${rows.length}</span></div><ul class="list">` + rows.map((c) => `
+      <li class="row">
+        <span class="row__name">${c[0]}</span>
+        <span class="row__weight">
+          <span class="row__kg">${kg(c[4])}<small>кг присед</small></span>
+          <span class="bar" aria-hidden="true"><span class="bar__shaft"></span>${plates(c[4]).map((p) => `<span class="plate" data-kg="${p}"></span>`).join("")}<span class="bar__collar"></span><span class="bar__sleeve"></span></span>
+        </span>
+        <span class="row__meta">${ago(c[2])}${c[3] ? ", пропусков: " + c[3] : ""}</span>
+      </li>`).join("") + "</ul>";
+  }).join("");
+</script>
+</body>
+</html>

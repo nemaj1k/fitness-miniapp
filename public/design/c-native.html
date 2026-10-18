@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Направление В — Как в Telegram</title>
+<style>
+  /* Как в Telegram: цвета темы Telegram (--tg-theme-*), системный шрифт, сгруппированные списки
+     как в настройках. Яркое здесь одно — фраза «кому написать» с именами, на которые можно нажать. */
+  :root {
+    --bg: var(--tg-theme-secondary-bg-color, #efeff4);
+    --section: var(--tg-theme-section-bg-color, #ffffff);
+    --text: var(--tg-theme-text-color, #000000);
+    --hint: var(--tg-theme-hint-color, #8e8e93);
+    --link: var(--tg-theme-link-color, #007aff);
+    --sep: rgba(60, 60, 67, 0.18);
+    --red: #ff3b30; --amber: #ff9500; --green: #34c759;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.35 -apple-system, "SF Pro Text", Roboto, system-ui, sans-serif; }
+  main { max-width: 440px; margin: 0 auto; padding: 8px 16px 40px; }
+
+  .seg { display: grid; grid-template-columns: 1fr 1fr; padding: 2px; border-radius: 9px; background: rgba(118, 118, 128, 0.12); }
+  .seg button { min-height: 36px; border: 0; border-radius: 7px; background: transparent; color: var(--text); font: 500 15px -apple-system, Roboto, system-ui, sans-serif; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--section); font-weight: 600; box-shadow: 0 3px 8px rgba(0,0,0,.12), 0 3px 1px rgba(0,0,0,.04); }
+
+  .lead { margin: 22px 4px 18px; font-size: 26px; line-height: 1.22; font-weight: 700; letter-spacing: -0.02em; }
+  .lead button {
+    border: 0; padding: 0; background: none; font: inherit; color: var(--link); cursor: pointer;
+    text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: rgba(0,122,255,.35);
+  }
+  .lead small { display: block; margin-top: 8px; font-size: 15px; font-weight: 400; letter-spacing: 0; color: var(--hint); }
+
+  .header { margin: 22px 16px 6px; font-size: 13px; color: var(--hint); }
+  .section { list-style: none; margin: 0; padding: 0; background: var(--section); border-radius: 12px; overflow: hidden; }
+  .cell { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto 10px; gap: 12px; align-items: center; min-height: 60px; padding: 8px 14px 8px 16px; }
+  /* Разделитель как в Telegram: начинается после аватара */
+  .cell + .cell { background: linear-gradient(var(--sep), var(--sep)) 72px 0 / calc(100% - 72px) 0.5px no-repeat; }
+  .cell__body { display: contents; }
+  .ava { position: relative; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 16px; }
+  .ava::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 13px; height: 13px; border-radius: 50%; border: 2.5px solid var(--section); }
+  .cell[data-status="risk"] .ava::after { background: var(--red); }
+  .cell[data-status="warning"] .ava::after { background: var(--amber); }
+  .cell[data-status="active"] .ava::after { background: var(--green); }
+  .name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sub { display: block; font-size: 14.5px; color: var(--hint); }
+  .value { font-size: 15px; color: var(--hint); text-align: right; white-space: nowrap; }
+  .chev { width: 8px; height: 13px; border-right: 2px solid #c4c4c7; border-bottom: 2px solid #c4c4c7; transform: rotate(-45deg) translate(-2px, -2px); }
+  .footer { margin: 6px 16px 0; font-size: 13px; color: var(--hint); }
+  button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="seg" role="group" aria-label="Раздел">
+    <button type="button" aria-pressed="true">Клиенты</button>
+    <button type="button" aria-pressed="false">Спортсмены</button>
+  </div>
+
+  <p class="lead">
+    Сегодня стоит написать: <button type="button">Екатерина</button>, <button type="button">Артём</button> и <button type="button">Дмитрий</button>.
+    <small>Они не отмечали тренировки 5 дней и дольше. Нажмите на имя — откроется карточка с готовым сообщением.</small>
+  </p>
+
+  <div id="sections"></div>
+</main>
+<script>
+  const CLIENTS = [
+    ["Екатерина Власова", "risk", 12, 4, 62.5, "#e17076"], ["Артём Беляев", "risk", 9, 3, 107.5, "#7bc862"],
+    ["Дмитрий Орлов", "warning", 5, 2, 87.5, "#65aadd"], ["Павел Новиков", "warning", 4, 2, 77.5, "#a695e7"],
+    ["Мария Козлова", "active", 3, 0, 50, "#ee7aae"], ["Игорь Лебедев", "active", 2, 0, 105, "#6ec9cb"],
+    ["Анна Смирнова", "active", 1, 0, 67.5, "#faa774"], ["Олеся Романова", "active", 1, 0, 60, "#7bc862"],
+  ];
+  const SECTIONS = [["risk", "Могут уйти"], ["warning", "Пропускают"], ["active", "Занимаются"]];
+  const kg = (n) => String(n).replace(".", ",") + " кг";
+  const ago = (d) => (d === 1 ? "вчера" : d + " дн. назад");
+  const ini = (n) => n.split(" ").map((w) => w[0]).join("");
+  document.getElementById("sections").innerHTML = SECTIONS.map(([id, title]) => {
+    const rows = CLIENTS.filter((c) => c[1] === id);
+    return `<div class="header">${title}</div><ul class="section">` + rows.map((c) => `
+      <li class="cell" data-status="${c[1]}"><span class="cell__body">
+        <span class="ava" style="background:${c[5]}">${ini(c[0])}</span>
+        <span style="min-width:0"><span class="name">${c[0]}</span><span class="sub">${ago(c[2])}${c[3] ? ", пропусков " + c[3] : ""}</span></span>
+        <span class="value">присед<br>${kg(c[4])}</span><span class="chev" aria-hidden="true"></span>
+      </span></li>`).join("") + "</ul>";
+  }).join("") + `<p class="footer">Статус меняется сам: 2 пропуска подряд — «пропускают», 7 дней без записей — «могут уйти».</p>`;
+</script>
+</body>
+</html>
