@@ -5,4 +5,6 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   base: "./",
   plugins: [react()],
+  // Telegram открывает Mini App только по HTTPS: в разработке — через туннель Cloudflare
+  server: { allowedHosts: [".trycloudflare.com"] },
 });

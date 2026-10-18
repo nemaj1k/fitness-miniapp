@@ -34,7 +34,8 @@ npm run build                                 # tsc --noEmit (единствен
 
 Приложение открывается внутри Telegram (WebView на iOS, Android и в десктопном клиенте) по кнопке бота. `localhost` в обычном браузере нужен только для быстрой вёрстки; итог проверять в Telegram.
 
-- **Только по HTTPS.** Telegram не откроет `http://localhost`. Для проверки на телефоне нужен туннель (cloudflared, ngrok) или деплой, а в BotFather указывается URL Mini App. Vite 6 блокирует запросы с чужих доменов, поэтому домен туннеля добавлять в `server.allowedHosts` в `vite.config.ts`.
+- **Только по HTTPS.** Telegram не откроет `http://localhost`. Приложение выкладывается на GitHub Pages: `https://nemaj1k.github.io/fitness-miniapp/`. Этот адрес указан в BotFather (Menu Button). Деплой делает `.github/workflows/deploy.yml` при каждом push в `main` (тесты, сборка, выкладка `dist/`), так что правки появляются в Telegram примерно через минуту после push.
+- Быстрый туннель Cloudflare (`cloudflared tunnel --url`) в сети разработчика не работает: SRV-записи `argotunnel.com` не находятся. `server.allowedHosts` в `vite.config.ts` оставлен на случай другого туннеля: Vite 6 блокирует запросы с чужих доменов.
 - **Тема берётся из Telegram, а не из системы.** Источник истины — `Telegram.WebApp.colorScheme` и `themeParams` (скрипт выставляет CSS-переменные `--tg-theme-*`). `prefers-color-scheme` в WebView может не совпадать с темой Telegram. Сейчас `styles.css` смотрит только на `prefers-color-scheme` — это нужно переделать.
 - **Мобильный экран.** Ширина около 390px, управление пальцем (цели не меньше 44px), отступы под вырезы и панель Telegram (`viewport-fit=cover`, safe area). Экран держится внутри `viewport`, без горизонтальной прокрутки.
 - **Нативные элементы Telegram вместо своих**, где они есть: `BackButton` для навигации назад между экранами, `MainButton` для главного действия (например «Сохранить подход» в логгере), `HapticFeedback` при записи подхода.
