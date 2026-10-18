@@ -1,0 +1,17 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-16T21:40:00Z" },
+  "title": "Logbook Coach",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 390, "h": 1060, "title": "Клиенты тренера", "is_interactive": true },
+    "Client.dc.html": { "x": 470, "y": 0, "w": 390, "h": 1620, "title": "Карточка клиента", "is_interactive": true },
+    "Logger.dc.html": { "x": 940, "y": 0, "w": 390, "h": 1160, "title": "Логгер клиента" }
+  },
+  "order": ["Main.dc.html", "Client.dc.html", "Logger.dc.html"],
+  "notes": {
+    "title": { "x": 0, "y": -260, "text": "Logbook Coach · Telegram Mini App", "kind": "title1", "maxW": 1330 }
+  },
+  "designSystems": []
+}

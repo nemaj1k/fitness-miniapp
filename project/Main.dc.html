@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Клиенты тренера</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+</style>
+</helmet>
+<div style="width:390px;height:1060px;box-sizing:border-box;background:#F4F5F8;color:#131A28;font-family:Onest,system-ui,sans-serif;font-size:15px;line-height:1.4;display:flex;flex-direction:column;padding-bottom:24px">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 6px;min-height:64px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:8px;font-family:Unbounded,Onest,sans-serif;font-weight:700;font-size:13px;letter-spacing:-0.01em">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" rx="6" fill="{{accent}}"/><path d="M6 8h10M6 11.5h10M6 15h6" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg>
+      <span>Logbook Coach</span>
+    </div>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#5A6578">тренер</span>
+  </div>
+
+  <div style="padding:10px 16px 14px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#5A6578">Сб 17 окт · 8 клиентов</div>
+    <h1 style="margin:6px 0 0;font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-0.015em">Клиенты</h1>
+  </div>
+
+  <div style="display:flex;gap:6px;padding:0 16px">
+    <button type="button" style="display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 10px;border:1px solid {{accent}};border-radius:999px;background:color-mix(in srgb, {{accent}} 12%, #ffffff);color:{{accent}};font-family:Onest,system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer"><span>Все</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px">8</span></button>
+    <button type="button" style="display:inline-flex;align-items:center;gap:5px;height:44px;padding:0 9px;border:1px solid #E0E4EC;border-radius:999px;background:#ffffff;color:#131A28;font-family:Onest,system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:#1FA25E"></span><span>Активны</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6578">4</span></button>
+    <button type="button" style="display:inline-flex;align-items:center;gap:5px;height:44px;padding:0 9px;border:1px solid #E0E4EC;border-radius:999px;background:#ffffff;color:#131A28;font-family:Onest,system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:#D19A0A"></span><span>Пропуски</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6578">2</span></button>
+    <button type="button" style="display:inline-flex;align-items:center;gap:5px;height:44px;padding:0 9px;border:1px solid #E0E4EC;border-radius:999px;background:#ffffff;color:#131A28;font-family:Onest,system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:#D83C3C"></span><span>Риск</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5A6578">2</span></button>
+  </div>
+
+  <div style="margin:16px 16px 0;background:#FBE1E1;border-radius:14px;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px 8px;color:#9A1B1B;font-weight:700;font-size:13.5px"><span>Кому написать</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">3</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;min-height:64px;box-sizing:border-box;border-top:1px solid #F2C4C4">
+      <p style="margin:0;font-size:14px;min-width:0"><b style="font-weight:600">Екатерина В.</b> не логировала 12 дней</p>
+      <button type="button" style="flex:none;height:44px;padding:0 14px;border:1px solid #F2C4C4;border-radius:10px;background:#ffffff;color:#9A1B1B;font-family:Onest,system-ui,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">Написать</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;min-height:64px;box-sizing:border-box;border-top:1px solid #F2C4C4">
+      <p style="margin:0;font-size:14px;min-width:0"><b style="font-weight:600">Артём Б.</b> не логировал 9 дней</p>
+      <button type="button" style="flex:none;height:44px;padding:0 14px;border:1px solid #F2C4C4;border-radius:10px;background:#ffffff;color:#9A1B1B;font-family:Onest,system-ui,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">Написать</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;min-height:64px;box-sizing:border-box;border-top:1px solid #F2C4C4">
+      <p style="margin:0;font-size:14px;min-width:0"><b style="font-weight:600">Дмитрий О.</b> не логировал 5 дней</p>
+      <button type="button" style="flex:none;height:44px;padding:0 14px;border:1px solid #F2C4C4;border-radius:10px;background:#ffffff;color:#9A1B1B;font-family:Onest,system-ui,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">Написать</button>
+    </div>
+  </div>
+
+  <div style="padding:16px 16px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#5A6578">Сначала те, кому нужно внимание</div>
+
+  <div style="margin:0 16px;background:#ffffff;border:1px solid #E0E4EC;border-radius:16px;overflow:hidden">
+
+    <div style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;min-height:68px;box-sizing:border-box">
+      <span style="width:40px;height:40px;border-radius:50%;background:#E8EBF2;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">ЕВ</span>
+      <div style="min-width:0"><div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Екатерина Власова</div><div style="font-size:12.5px;color:#5A6578;margin-top:1px">Присед 62,5 кг</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:999px;background:#FBE1E1;color:#9A1B1B;font-size:12px;font-weight:600;line-height:1.3"><span style="width:7px;height:7px;border-radius:50%;background:#D83C3C"></span>Риск ухода</span><span style="font-size:12px;color:#5A6578">12 дней назад</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;min-height:68px;box-sizing:border-box;border-top:1px solid #E0E4EC">
+      <span style="width:40px;height:40px;border-radius:50%;background:#E8EBF2;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">АБ</span>
+      <div style="min-width:0"><div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Артём Беляев</div><div style="font-size:12.5px;color:#5A6578;margin-top:1px">Присед 107,5 кг</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:999px;background:#FBE1E1;color:#9A1B1B;font-size:12px;font-weight:600;line-height:1.3"><span style="width:7px;height:7px;border-radius:50%;background:#D83C3C"></span>Риск ухода</span><span style="font-size:12px;color:#5A6578">9 дней назад</span></div>
+    </div>
+
+    <a href="Client.dc.html" style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;min-height:68px;box-sizing:border-box;border-top:1px solid #E0E4EC">
+      <span style="width:40px;height:40px;border-radius:50%;background:#E8EBF2;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">ДО</span>
+      <div style="min-width:0"><div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Дмитрий Орлов</div><div style="font-size:12.5px;color:#5A6578;margin-top:1px">Присед 87,5 кг</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:999px;background:#FBEFC8;color:#765000;font-size:12px;font-weight:600;line-height:1.3"><span style="width:7px;height:7px;border-radius:50%;background:#D19A0A"></span>Пропустил 2</span><span style="font-size:12px;color:#5A6578">5 дней назад</span></div>
+    </a>
+
+    <div style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;min-height:68px;box-sizing:border-box;border-top:1px solid #E0E4EC">
+      <span style="width:40px;height:40px;border-radius:50%;background:#E8EBF2;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">ПН</span>
+      <div style="min-width:0"><div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Павел Новиков</div><div style="font-size:12.5px;color:#5A6578;margin-top:1px">Присед 77,5 кг</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:999px;background:#FBEFC8;color:#765000;font-size:12px;font-weight:600;line-height:1.3"><span style="width:7px;height:7px;border-radius:50%;background:#D19A0A"></span>Пропустил 2</span><span style="font-size:12px;color:#5A6578">4 дня назад</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;min-height:68px;box-sizing:border-box;border-top:1px solid #E0E4EC">
+      <span style="width:40px;height:40px;border-radius:50%;background:#E8EBF2;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">МК</span>
+      <div style="min-width:0"><div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Мария Козлова</div><div style="font-size:12.5px;color:#5A6578;margin-top:1px">Присед 50 кг</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:999px;background:#DDF3E6;color:#0E6A3B;font-size:12px;font-weight:600;line-height:1.3"><span style="width:7px;height:7px;border-radius:50%;background:#1FA25E"></span>Активна</span><span style="font-size:12px;color:#5A6578">3 дня назад</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;min-height:68px;box-sizing:border-box;border-top:1px solid #E0E4EC">
+      <span style="width:40px;height:40px;border-radius:50%;background:#E8EBF2;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">ИЛ</span>
+      <div style="min-width:0"><div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Игорь Лебедев</div><div style="font-size:12.5px;color:#5A6578;margin-top:1px">Присед 105 кг</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:999px;background:#DDF3E6;color:#0E6A3B;font-size:12px;font-weight:600;line-height:1.3"><span style="width:7px;height:7px;border-radius:50%;background:#1FA25E"></span>Активен</span><span style="font-size:12px;color:#5A6578">2 дня назад</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;min-height:68px;box-sizing:border-box;border-top:1px solid #E0E4EC">
+      <span style="width:40px;height:40px;border-radius:50%;background:#E8EBF2;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">АС</span>
+      <div style="min-width:0"><div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Анна Смирнова</div><div style="font-size:12.5px;color:#5A6578;margin-top:1px">Присед 67,5 кг</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:999px;background:#DDF3E6;color:#0E6A3B;font-size:12px;font-weight:600;line-height:1.3"><span style="width:7px;height:7px;border-radius:50%;background:#1FA25E"></span>Активна</span><span style="font-size:12px;color:#5A6578">вчера</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;min-height:68px;box-sizing:border-box;border-top:1px solid #E0E4EC">
+      <span style="width:40px;height:40px;border-radius:50%;background:#E8EBF2;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">ОР</span>
+      <div style="min-width:0"><div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Олеся Романова</div><div style="font-size:12.5px;color:#5A6578;margin-top:1px">Присед 60 кг</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 8px;border-radius:999px;background:#DDF3E6;color:#0E6A3B;font-size:12px;font-weight:600;line-height:1.3"><span style="width:7px;height:7px;border-radius:50%;background:#1FA25E"></span>Активна</span><span style="font-size:12px;color:#5A6578">вчера</span></div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#2B47D9","options":["#2B47D9","#0E7C66","#C2410C","#7C3AED"]},"$preview":{"width":390,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#2B47D9' };
+  }
+}
+</script>
+</body>
+</html>
