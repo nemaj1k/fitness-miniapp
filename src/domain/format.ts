@@ -98,6 +98,13 @@ export function formatHeaderDate(date: string): string {
   return `${WEEKDAYS_SHORT[d.getUTCDay()]}, ${d.getUTCDate()} ${MONTHS_GENITIVE[d.getUTCMonth()]}`;
 }
 
+/** Сколько осталось до старта — для подписи под большим числом дней. */
+export function formatStartCountdown(daysLeft: number): { value: string; label: string } {
+  if (daysLeft < 0) return { value: "—", label: "старт прошёл" };
+  if (daysLeft === 0) return { value: "0", label: "старт сегодня" };
+  return { value: String(daysLeft), label: `${plural(daysLeft, "день", "дня", "дней")} до старта` };
+}
+
 /** «2026-10-05» → «5 окт». */
 export function formatDayMonth(date: string): string {
   const d = toUtc(date);

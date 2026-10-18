@@ -11,6 +11,7 @@ import {
   formatKg,
   formatPace,
   formatSet,
+  formatStartCountdown,
   formatWorkoutDate,
   initials,
   plural,
@@ -82,6 +83,13 @@ test("разница и сдвиг дат, в том числе через ме�
   assert.equal(daysBetween("2026-09-28", "2026-10-05"), 7);
   assert.equal(addDays("2026-10-12", -49), "2026-08-24");
   assert.equal(addDays("2026-10-31", 1), "2026-11-01");
+});
+
+test("обратный отсчёт до старта", () => {
+  assert.deepEqual(formatStartCountdown(10), { value: "10", label: "дней до старта" });
+  assert.deepEqual(formatStartCountdown(1), { value: "1", label: "день до старта" });
+  assert.deepEqual(formatStartCountdown(0), { value: "0", label: "старт сегодня" });
+  assert.deepEqual(formatStartCountdown(-3), { value: "—", label: "старт прошёл" });
 });
 
 test("подходы: вес с запятой, RPE через @", () => {
