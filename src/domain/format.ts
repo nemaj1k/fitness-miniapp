@@ -87,6 +87,17 @@ export function formatWorkoutDate(date: string): string {
   return `${WEEKDAYS_SHORT[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS_SHORT[d.getUTCMonth()]}`;
 }
 
+const MONTHS_GENITIVE = [
+  "января", "февраля", "марта", "апреля", "мая", "июня",
+  "июля", "августа", "сентября", "октября", "ноября", "декабря",
+];
+
+/** «2026-10-17» → «Сб, 17 октября» — дата в шапке экрана. */
+export function formatHeaderDate(date: string): string {
+  const d = toUtc(date);
+  return `${WEEKDAYS_SHORT[d.getUTCDay()]}, ${d.getUTCDate()} ${MONTHS_GENITIVE[d.getUTCMonth()]}`;
+}
+
 /** «2026-10-05» → «5 окт». */
 export function formatDayMonth(date: string): string {
   const d = toUtc(date);

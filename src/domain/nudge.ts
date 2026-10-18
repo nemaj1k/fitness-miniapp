@@ -6,6 +6,14 @@ import { daysBetween, formatDayMonth, plural, weekday } from "./format.ts";
 /** В винительном падеже: «в понедельник», «во вторник»… Индекс — getUTCDay(). */
 const WEEKDAYS_ON = ["в воскресенье", "в понедельник", "во вторник", "в среду", "в четверг", "в пятницу", "в субботу"];
 
+const COLLECTIVE_DATIVE = ["", "", "двоим", "троим", "четверым", "пятерым", "шестерым", "семерым"];
+
+/** Заголовок блока «кому написать»: «Написать троим», «Написать 9 клиентам». */
+export function nudgeTitle(count: number): string {
+  if (count === 1) return "Написать одному клиенту";
+  return `Написать ${COLLECTIVE_DATIVE[count] || `${count} ${plural(count, "клиенту", "клиентам", "клиентам")}`}`;
+}
+
 /** «Нет записей 5 дней». */
 export function nudgeHeadline(daysSilent: number): string {
   return `Нет записей ${daysSilent} ${plural(daysSilent, "день", "дня", "дней")}`;

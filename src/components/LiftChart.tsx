@@ -22,7 +22,7 @@ export function LiftChart({ client }: { client: Client }) {
 
   return (
     <section className="card">
-      <div className="caption mono muted">Рабочий вес по неделям, кг</div>
+      <h2 className="card__title">Рабочий вес по неделям, кг</h2>
       <div className="segments" role="group" aria-label="Упражнение">
         {LIFTS.map((l) => (
           <button

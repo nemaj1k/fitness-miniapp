@@ -1,23 +1,25 @@
 import type { Client } from "../data/mockClients.ts";
-import { plural, shortName } from "../domain/format.ts";
+import { shortName } from "../domain/format.ts";
+import { nudgeTitle } from "../domain/nudge.ts";
 
-/** Красный флаг: кому из клиентов тренеру пора написать. */
-export function NudgeBanner({ clients }: { clients: Client[] }) {
+/** Красный флаг на списке: кому тренеру пора написать. Имя открывает карточку с готовым сообщением. */
+export function NudgeBanner({ clients, onOpen }: { clients: Client[]; onOpen: (id: string) => void }) {
   if (clients.length === 0) return null;
   return (
-    <section className="nudge" aria-label="Кому написать">
-      <div className="nudge__head">
-        <span>Кому написать</span>
-        <span className="mono">{clients.length}</span>
-      </div>
-      <ul className="nudge__list">
-        {clients.map((c) => (
-          <li key={c.id} className="nudge__item">
-            <b>{shortName(c.name)}</b> нет записей {c.daysSinceLastLog}{" "}
-            {plural(c.daysSinceLastLog, "день", "дня", "дней")}
-          </li>
+    <section className="alert" aria-label="Кому написать">
+      <h2 className="alert__title">{nudgeTitle(clients.length)}</h2>
+      <p className="alert__text">
+        {clients.map((c, i) => (
+          <span key={c.id}>
+            {i > 0 && ", "}
+            <button type="button" className="alert__name" onClick={() => onOpen(c.id)}>
+              {shortName(c.name)}
+            </button>{" "}
+            {i === 0 ? `${c.daysSinceLastLog} дн. без записей` : c.daysSinceLastLog}
+          </span>
         ))}
-      </ul>
+        .
+      </p>
     </section>
   );
 }

@@ -1,6 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { nudgeDetails, nudgeHeadline, nudgeMessage } from "./nudge.ts";
+import { nudgeDetails, nudgeHeadline, nudgeMessage, nudgeTitle } from "./nudge.ts";
+
+test("заголовок блока: собирательные до семи, дальше числом", () => {
+  assert.equal(nudgeTitle(1), "Написать одному клиенту");
+  assert.equal(nudgeTitle(3), "Написать троим");
+  assert.equal(nudgeTitle(7), "Написать семерым");
+  assert.equal(nudgeTitle(9), "Написать 9 клиентам");
+  assert.equal(nudgeTitle(21), "Написать 21 клиенту");
+});
 
 const TODAY = "2026-10-17"; // суббота
 

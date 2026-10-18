@@ -2,68 +2,55 @@ import { useMemo } from "react";
 import { ClientRow } from "../components/ClientRow.tsx";
 import { NudgeBanner } from "../components/NudgeBanner.tsx";
 import type { Client } from "../data/mockClients.ts";
+import { formatHeaderDate, plural } from "../domain/format.ts";
 import { compareByAttention, getClientStatus, needsNudge, type ClientStatus } from "../domain/status.ts";
 
-export type Filter = "all" | ClientStatus;
-
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: "all", label: "Все" },
-  { id: "active", label: "Активны" },
-  { id: "warning", label: "Пропуски" },
-  { id: "risk", label: "Риск" },
+const GROUPS: { status: ClientStatus; title: string }[] = [
+  { status: "risk", title: "Риск ухода" },
+  { status: "warning", title: "Пропускают" },
+  { status: "active", title: "В графике" },
 ];
 
 interface Props {
   clients: Client[];
-  filter: Filter;
-  onFilter: (filter: Filter) => void;
+  today: string;
   onOpen: (id: string) => void;
 }
 
-/** Список клиентов по макету project/Main.dc.html. Фильтр хранит App, чтобы он пережил переход в карточку. */
-export function ClientsScreen({ clients, filter, onFilter, onOpen }: Props) {
+/** Список клиентов, сгруппированный по статусу: сверху те, кому нужно внимание. */
+export function ClientsScreen({ clients, today, onOpen }: Props) {
   const sorted = useMemo(() => [...clients].sort(compareByAttention), [clients]);
   const nudges = useMemo(() => sorted.filter(needsNudge), [sorted]);
 
-  const counts = useMemo(() => {
-    const c: Record<Filter, number> = { all: sorted.length, active: 0, warning: 0, risk: 0 };
-    for (const client of sorted) c[getClientStatus(client)] += 1;
-    return c;
-  }, [sorted]);
-
-  const visible = filter === "all" ? sorted : sorted.filter((c) => getClientStatus(c) === filter);
-
   return (
-    <main className="screen">
-      <header className="topbar">
-        <span className="brand">Logbook Coach</span>
-        <span className="mono muted">тренер</span>
-      </header>
-
-      <h1 className="title">Клиенты</h1>
-
-      <div className="filters" role="group" aria-label="Фильтр по статусу">
-        {FILTERS.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            className="chip"
-            aria-pressed={filter === f.id}
-            onClick={() => onFilter(f.id)}
-          >
-            {f.label} <span className="mono">{counts[f.id]}</span>
-          </button>
-        ))}
+    <>
+      <div className="head">
+        <h1 className="head__title">Клиенты</h1>
+        <p className="head__meta">
+          {formatHeaderDate(today)}
+          <br />
+          {clients.length} {plural(clients.length, "человек", "человека", "человек")}
+        </p>
       </div>
 
-      <NudgeBanner clients={nudges} />
+      <NudgeBanner clients={nudges} onOpen={onOpen} />
 
-      <p className="caption mono muted">Сначала те, кому нужно внимание</p>
-      <ul className="list">
-        {visible.map((client) => (
-          <ClientRow key={client.id} client={client} onOpen={onOpen} />
-        ))}
-      </ul>
-    </main>
+      {GROUPS.map(({ status, title }) => {
+        const rows = sorted.filter((c) => getClientStatus(c) === status);
+        if (rows.length === 0) return null;
+        return (
+          <section key={status} aria-label={title}>
+            <h2 className="group">
+              {title} <span>{rows.length}</span>
+            </h2>
+            <ul className="list">
+              {rows.map((client) => (
+                <ClientRow key={client.id} client={client} onOpen={onOpen} />
+              ))}
+            </ul>
+          </section>
+        );
+      })}
+    </>
   );
 }

@@ -7,6 +7,7 @@ import {
   formatDayMonth,
   formatDaysAgo,
   formatDaysAgoShort,
+  formatHeaderDate,
   formatKg,
   formatPace,
   formatSet,
@@ -72,6 +73,8 @@ test("даты как в макете", () => {
   assert.equal(formatWorkoutDate("2026-10-08"), "Чт 8 окт");
   assert.equal(formatDayMonth("2026-10-05"), "5 окт");
   assert.equal(formatDateDots("2026-08-24"), "24.08");
+  assert.equal(formatHeaderDate("2026-10-17"), "Сб, 17 октября");
+  assert.equal(formatHeaderDate("2026-03-01"), "Вс, 1 марта");
 });
 
 test("разница и сдвиг дат, в том числе через месяц", () => {

@@ -6,15 +6,16 @@ export function WorkoutCard({ workout, today }: { workout: Workout; today: strin
   return (
     <article className="workout">
       <header className="workout__head">
-        <b>
-          {formatWorkoutDate(workout.date)} · {workout.title}
-        </b>
-        <span className="mono muted">{formatDaysAgoShort(daysBetween(workout.date, today))}</span>
+        <span>
+          <b>{workout.title}</b>
+          <span className="workout__date">{formatWorkoutDate(workout.date)}</span>
+        </span>
+        <span className="muted">{formatDaysAgoShort(daysBetween(workout.date, today))}</span>
       </header>
       {workout.exercises.map((exercise) => (
         <div key={exercise.name} className="workout__exercise">
           <div className="workout__name">{exercise.name}</div>
-          <div className="workout__sets mono">
+          <div className="workout__sets">
             {exercise.sets.map((set, i) => {
               const [main, rpe] = formatSet(set).split(" ");
               return (
