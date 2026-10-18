@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Logbook Coach — предпросмотр</title>
+<!--
+  Предпросмотр Mini App в контуре iPhone с шапкой Telegram — чтобы смотреть без телефона.
+  Приложение грузится в iframe с того же сайта (./?theme=…). Размер экрана — 440×956 pt,
+  как у больших iPhone Pro Max. Шапка Telegram нарисована, это не настоящий клиент:
+  внутри iframe приложение работает как в браузере, поэтому «назад» — ссылка в самой карточке.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;700&display=swap" />
+<style>
+  :root {
+    --page: #e9ebf0; --page-text: #131a28; --page-muted: #5a6578;
+    --tg-bg: #f4f5f8; --tg-text: #131a28; --tg-link: #2b47d9;
+    --frame: #1d1f24; --frame-edge: #3a3d44;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --page: #08090c; --page-text: #e8ecf4; --page-muted: #9aa6ba;
+    --tg-bg: #0f1420; --tg-text: #e8ecf4; --tg-link: #8aa0ff;
+    --frame: #2a2c31; --frame-edge: #4a4d55;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--page); color: var(--page-text);
+    font: 15px/1.4 Onest, system-ui, sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 16px; overflow: hidden;
+  }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px; width: 100%; max-width: 640px; }
+  .bar h1 { margin: 0; font-size: 15px; font-weight: 700; }
+  .bar p { margin: 0; font-size: 13px; color: var(--page-muted); }
+  .toggle { display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px; background: rgba(127,127,127,.18); }
+  .toggle button {
+    min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent;
+    color: var(--page-text); font: 600 13px Onest, system-ui, sans-serif; cursor: pointer;
+  }
+  .toggle button[aria-pressed="true"] { background: var(--tg-bg); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+  .bar a { color: var(--tg-link); font-size: 13px; font-weight: 600; }
+
+  .stage { flex: 1; width: 100%; display: flex; align-items: flex-start; justify-content: center; margin-top: 16px; min-height: 0; }
+  /* Корпус: экран 440×956 + рамка 14px */
+  .phone {
+    position: relative; width: 468px; height: 984px; padding: 14px; flex: none;
+    border-radius: 70px; background: var(--frame);
+    box-shadow: 0 0 0 2px var(--frame-edge), 0 30px 60px rgba(0,0,0,.25);
+    transform-origin: top center;
+  }
+  .phone::before, .phone::after { content: ""; position: absolute; width: 4px; border-radius: 2px; background: var(--frame-edge); }
+  .phone::before { left: -5px; top: 190px; height: 64px; box-shadow: 0 90px 0 var(--frame-edge); }
+  .phone::after { right: -5px; top: 250px; height: 100px; }
+  .screen {
+    position: relative; width: 440px; height: 956px; overflow: hidden;
+    border-radius: 56px; background: var(--tg-bg); display: flex; flex-direction: column;
+  }
+  .status {
+    flex: none; height: 62px; padding: 0 34px 0 46px; display: flex; align-items: center; justify-content: space-between;
+    color: var(--tg-text); font: 600 17px -apple-system, system-ui, sans-serif;
+  }
+  .island { position: absolute; top: 11px; left: 50%; width: 126px; height: 37px; margin-left: -63px; border-radius: 20px; background: #000; }
+  .status svg { display: block; }
+  .tg {
+    flex: none; height: 52px; padding: 0 16px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    color: var(--tg-text); font: 17px -apple-system, system-ui, sans-serif;
+  }
+  .tg__close { color: var(--tg-link); justify-self: start; }
+  .tg__title { text-align: center; line-height: 1.15; }
+  .tg__title b { display: block; font-weight: 600; }
+  .tg__title span { font-size: 12.5px; color: var(--page-muted); }
+  .tg__more { justify-self: end; width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--tg-link); display: grid; place-items: center; }
+  .tg__more i { display: block; width: 3px; height: 3px; border-radius: 50%; background: var(--tg-link); box-shadow: -5px 0 0 var(--tg-link), 5px 0 0 var(--tg-link); }
+  iframe { flex: 1; width: 100%; border: 0; display: block; background: var(--tg-bg); }
+  .home { position: absolute; bottom: 8px; left: 50%; width: 150px; height: 5px; margin-left: -75px; border-radius: 3px; background: var(--tg-text); opacity: .85; pointer-events: none; }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <h1>Logbook Coach в Telegram</h1>
+    <div class="toggle" role="group" aria-label="Тема Telegram">
+      <button type="button" data-theme-btn="light">Светлая</button>
+      <button type="button" data-theme-btn="dark">Тёмная</button>
+    </div>
+    <a href="./" target="_blank" rel="noopener">Открыть без рамки</a>
+    <p>Экран 440×956 pt, как у iPhone Pro Max. Шапка Telegram — рисунок, приложение внутри — настоящее.</p>
+  </div>
+
+  <div class="stage">
+    <div class="phone" id="phone">
+      <div class="screen">
+        <div class="island" aria-hidden="true"></div>
+        <div class="status" aria-hidden="true">
+          <span>9:41</span>
+          <svg width="78" height="14" viewBox="0 0 78 14" fill="currentColor">
+            <rect x="0" y="9" width="3.5" height="4" rx="1"/><rect x="5" y="6.5" width="3.5" height="6.5" rx="1"/>
+            <rect x="10" y="4" width="3.5" height="9" rx="1"/><rect x="15" y="1" width="3.5" height="12" rx="1"/>
+            <path d="M31 4.2a9 9 0 0 1 12 0l-1.4 1.5a7 7 0 0 0-9.2 0zM33.6 7a5.2 5.2 0 0 1 6.8 0L39 8.5a3.2 3.2 0 0 0-4 0zM37 12.6l-1.7-1.8a2.4 2.4 0 0 1 3.4 0z"/>
+            <rect x="51" y="1" width="24" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-opacity=".4"/>
+            <rect x="53" y="3" width="17" height="8" rx="2"/><rect x="76" y="5" width="1.5" height="4" rx=".75" fill-opacity=".4"/>
+          </svg>
+        </div>
+        <div class="tg" aria-hidden="true">
+          <span class="tg__close">Закрыть</span>
+          <span class="tg__title"><b>Logbook Coach</b><span>мини-приложение</span></span>
+          <span class="tg__more"><i></i></span>
+        </div>
+        <iframe id="app" title="Logbook Coach"></iframe>
+        <div class="home" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const root = document.documentElement;
+  const frame = document.getElementById("app");
+  const phone = document.getElementById("phone");
+  const buttons = document.querySelectorAll("[data-theme-btn]");
+
+  function setTheme(theme) {
+    root.dataset.theme = theme;
+    buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.themeBtn === theme)));
+    frame.src = "./?theme=" + theme;
+    try { localStorage.setItem("preview-theme", theme); } catch {}
+  }
+
+  // Телефон целиком помещается в окно: уменьшаем, но не увеличиваем
+  function fit() {
+    const stage = phone.parentElement.getBoundingClientRect();
+    const scale = Math.min(1, stage.width / 472, (window.innerHeight - stage.top - 16) / 988);
+    phone.style.transform = "scale(" + scale + ")";
+    phone.style.marginBottom = (scale - 1) * 984 + "px";
+    phone.style.marginLeft = phone.style.marginRight = ((scale - 1) * 468) / 2 + "px";
+  }
+
+  buttons.forEach((b) => b.addEventListener("click", () => setTheme(b.dataset.themeBtn)));
+  let saved = null;
+  try { saved = localStorage.getItem("preview-theme"); } catch {}
+  setTheme(saved === "dark" || saved === "light" ? saved : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  fit();
+  window.addEventListener("resize", fit);
+</script>
+</body>
+</html>

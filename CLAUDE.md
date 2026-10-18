@@ -24,11 +24,14 @@ npm run build                                 # tsc --noEmit (единствен
 
 - `src/domain/` — чистые функции без React и без обращений к данным. Задумано так, чтобы правила легко тестировать и позже перенести на сервер (Supabase cron для напоминаний). Тесты лежат рядом (`*.test.ts`, `node:test` + `node:assert/strict`).
   - `status.ts` — статусы `active | warning | risk`, флаг «кому написать» (`needsNudge`) и сортировка по вниманию. Все пороги — только в объекте `THRESHOLDS`, не дублировать числа в компонентах или тестах (тесты границ ссылаются на `THRESHOLDS`).
-  - `format.ts` — русские склонения (`plural`), «N дней назад», инициалы, вес с запятой. Любой текст с числом в UI должен идти через эти функции.
-- `src/data/mockClients.ts` — тип `Client` (расширяет `ClientActivity` из домена) и вымышленные клиенты. Это временная замена базы: при подключении Supabase меняется источник данных, а доменный слой остаётся.
-- `src/App.tsx` — сейчас единственный экран «Клиенты»: сортирует, считает фильтры и баннер «Кому написать» через функции домена. Компоненты в `src/components/` — презентационные.
-- `src/main.tsx` вызывает `Telegram.WebApp.ready()/expand()`; скрипт Telegram подключён в `index.html`. Вне Telegram `window.Telegram.WebApp` нет — код обязан работать и без него. Типы WebApp минимальные, в `src/telegram.d.ts`, расширяются по мере использования методов.
-- `src/styles.css` — CSS-переменные (цвета статусов `--ok-*`, `--warn-*`, `--risk-*`, шрифты Onest / JetBrains Mono / Unbounded) со светлой и тёмной темой через `prefers-color-scheme`. Новые цвета добавлять переменными в обе темы.
+  - `format.ts` — русские склонения (`plural`), «N дней назад», инициалы, вес с запятой, даты `YYYY-MM-DD` (считаются в UTC, без `Intl`), подходы «65×6 @8». Любой текст с числом в UI должен идти через эти функции.
+  - `training.ts` — типы тренировок и `LIFTS` (присед / жим / тяга); `progress.ts` — темп (наименьшие квадраты), прогноз до цели, шкала графика; `nudge.ts` — тексты красного флага.
+  - Тексты для клиентов и тренера пишем без рода («Нет записей 5 дней», а не «не логировал»): среди них и мужчины, и женщины.
+- `src/data/mockClients.ts` — тип `Client` (расширяет `ClientActivity` из домена) и вымышленные клиенты; «сегодня» для моков — `MOCK_TODAY`. Это временная замена базы: при подключении Supabase меняется источник данных, а доменный слой остаётся. У моков намеренно нет `telegramUsername`: выдуманный ник может принадлежать реальному человеку.
+- `src/App.tsx` — два экрана без роутера (`src/screens/`): список и карточка клиента; хранит фильтр и прокрутку списка, чтобы они пережили переход. `?client=<id>` сразу открывает карточку. Компоненты в `src/components/` — презентационные.
+- `src/telegram/` — всё общение с Telegram: `webApp.ts` (`getWebApp`, `isInTelegram`, `supports`), `theme.ts`, `useBackButton.ts`. Скрипт Telegram (подключён в `index.html`) создаёт `window.Telegram.WebApp` даже в обычном браузере, с `platform = "unknown"`, поэтому напрямую `window.Telegram` не трогать — только через `getWebApp()`. Методы новее 6.0 — только после `supports("<версия>")`. Типы в `src/telegram.d.ts`, расширяются по мере использования.
+- `src/styles.css` — CSS-переменные (цвета статусов `--ok-*`, `--warn-*`, `--risk-*`, шрифты Onest / JetBrains Mono / Unbounded). Тёмная тема — блок `:root[data-theme="dark"]`, атрибут ставит `src/telegram/theme.ts`. Новые цвета добавлять переменными в обе темы.
+- `public/preview.html` — предпросмотр в контуре iPhone с нарисованной шапкой Telegram (`/preview.html` на dev-сервере и на Pages). Приложение там в iframe с `?theme=light|dark`. Скриншоты для самопроверки: headless Chrome (`chrome.exe --headless=new --screenshot=… "http://localhost:5173/?theme=dark&client=c3"`).
 
 ## Telegram Mini App — главная среда запуска
 
@@ -36,12 +39,12 @@ npm run build                                 # tsc --noEmit (единствен
 
 - **Только по HTTPS.** Telegram не откроет `http://localhost`. Приложение выкладывается на GitHub Pages: `https://nemaj1k.github.io/fitness-miniapp/`. Этот адрес указан в BotFather (Menu Button). Деплой делает `.github/workflows/deploy.yml` при каждом push в `main` (тесты, сборка, выкладка `dist/`), так что правки появляются в Telegram примерно через минуту после push.
 - Быстрый туннель Cloudflare (`cloudflared tunnel --url`) в сети разработчика не работает: SRV-записи `argotunnel.com` не находятся. `server.allowedHosts` в `vite.config.ts` оставлен на случай другого туннеля: Vite 6 блокирует запросы с чужих доменов.
-- **Тема берётся из Telegram, а не из системы.** Источник истины — `Telegram.WebApp.colorScheme` и `themeParams` (скрипт выставляет CSS-переменные `--tg-theme-*`). `prefers-color-scheme` в WebView может не совпадать с темой Telegram. Сейчас `styles.css` смотрит только на `prefers-color-scheme` — это нужно переделать.
+- **Тема берётся из Telegram, а не из системы.** Источник истины — `Telegram.WebApp.colorScheme` и событие `themeChanged`; шапка и фон Telegram красятся в `--bg` (`setHeaderColor`/`setBackgroundColor`). `prefers-color-scheme` в WebView может не совпадать с темой Telegram, поэтому он используется только в браузере.
 - **Мобильный экран.** Ширина около 390px, управление пальцем (цели не меньше 44px), отступы под вырезы и панель Telegram (`viewport-fit=cover`, safe area). Экран держится внутри `viewport`, без горизонтальной прокрутки.
 - **Нативные элементы Telegram вместо своих**, где они есть: `BackButton` для навигации назад между экранами, `MainButton` для главного действия (например «Сохранить подход» в логгере), `HapticFeedback` при записи подхода.
 - **Пользователь и авторизация.** Кто открыл приложение, приходит в `Telegram.WebApp.initData`. Доверять ему можно только после проверки подписи на сервере (токен бота) — в браузере не проверять и токен в клиент не класть. `initDataUnsafe` годится только для отображения.
 - **Две роли в одном приложении:** тренер (экраны «Клиенты», карточка клиента) и клиент (логгер). Роль будет определяться по пользователю Telegram после подключения Supabase.
-- Вне Telegram `window.Telegram.WebApp` отсутствует — для разработки в браузере всё обращение к нему через `?.`, а для новых методов добавлять типы в `src/telegram.d.ts`.
+- Вне Telegram `getWebApp()` возвращает `undefined` — всё должно работать и так; в браузере «назад» — ссылка в шапке карточки вместо `BackButton`.
 
 ## Соглашения TypeScript
 

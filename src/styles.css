@@ -10,27 +10,28 @@
   --warn-bg: #fbefc8; --warn-text: #765000; --warn-dot: #d19a0a;
   --risk-bg: #fbe1e1; --risk-text: #9a1b1b; --risk-dot: #d83c3c; --risk-line: #f2c4c4;
   --avatar: #e8ebf2;
+  --segment-bg: #eef0f5;
   --font: "Onest", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --font-brand: "Unbounded", "Onest", sans-serif;
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1420;
-    --surface: #1a2030;
-    --border: #2a3144;
-    --text: #e8ecf4;
-    --muted: #9aa6ba;
-    --accent: #8aa0ff;
-    --accent-soft: #1f2748;
-    --ok-bg: #12301f; --ok-text: #8fe0b2; --ok-dot: #3ec27f;
-    --warn-bg: #3a2f12; --warn-text: #f3d27a; --warn-dot: #e0ae2c;
-    --risk-bg: #3a1b1e; --risk-text: #ffb4b4; --risk-dot: #f06060; --risk-line: #5a2a2e;
-    --avatar: #262d42;
-    color-scheme: dark;
-  }
+/* Тему выбирает src/telegram/theme.ts: в Telegram — по теме Telegram, в браузере — по системной */
+:root[data-theme="dark"] {
+  --bg: #0f1420;
+  --surface: #1a2030;
+  --border: #2a3144;
+  --text: #e8ecf4;
+  --muted: #9aa6ba;
+  --accent: #8aa0ff;
+  --accent-soft: #1f2748;
+  --ok-bg: #12301f; --ok-text: #8fe0b2; --ok-dot: #3ec27f;
+  --warn-bg: #3a2f12; --warn-text: #f3d27a; --warn-dot: #e0ae2c;
+  --risk-bg: #3a1b1e; --risk-text: #ffb4b4; --risk-dot: #f06060; --risk-line: #5a2a2e;
+  --avatar: #262d42;
+  --segment-bg: #121827;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -86,11 +87,15 @@ body {
 .caption { margin: 16px 0 8px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
 
 .list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.list__item + .list__item { border-top: 1px solid var(--border); }
 .row {
   display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center;
-  min-height: 68px; padding: 12px 14px;
+  width: 100%; min-height: 68px; padding: 12px 14px;
+  border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
 }
-.row + .row { border-top: 1px solid var(--border); }
+.row:active { background: var(--segment-bg); }
+.row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.row__name, .row__sub { display: block; }
 .avatar {
   width: 40px; height: 40px; border-radius: 50%; background: var(--avatar);
   display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;
@@ -112,3 +117,81 @@ body {
 .pill--warning .pill__dot { background: var(--warn-dot); }
 .pill--risk { background: var(--risk-bg); color: var(--risk-text); }
 .pill--risk .pill__dot { background: var(--risk-dot); }
+
+/* ── Карточка клиента (макет project/Client.dc.html) ── */
+
+.back {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px 0 0;
+  border: 0; background: none; color: var(--accent); font: 600 15px var(--font); cursor: pointer;
+}
+.back path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.profile { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
+.avatar--large { flex: none; width: 56px; height: 56px; font-size: 18px; }
+.profile__main { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.profile__name { margin: 0; font-size: 22px; line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; }
+
+.flag { margin-top: 16px; padding: 14px; background: var(--risk-bg); border-radius: 14px; }
+.flag__title { color: var(--risk-text); font-size: 15px; font-weight: 700; }
+.flag__details { margin-top: 2px; font-size: 13.5px; }
+.flag__message {
+  margin-top: 10px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--risk-line);
+  border-radius: 10px; font-size: 14px; line-height: 1.45; user-select: text;
+}
+.flag__hint { margin-top: 8px; font-size: 12.5px; color: var(--risk-text); }
+.button {
+  margin-top: 12px; width: 100%; min-height: 48px; border: 0; border-radius: 12px;
+  background: var(--accent); color: #fff; font: 600 15px var(--font); cursor: pointer;
+}
+:root[data-theme="dark"] .button { color: #0f1420; }
+.button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.stats {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 16px 0 0;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+}
+.stats__item { padding: 12px; min-width: 0; }
+.stats__item + .stats__item { border-left: 1px solid var(--border); }
+.stats__label { font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.stats__value { margin: 4px 0 0; font-size: 15px; font-weight: 600; }
+
+.card { margin-top: 16px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+.card > .caption { margin: 0; }
+
+.segments { display: flex; gap: 2px; margin-top: 10px; padding: 3px; background: var(--segment-bg); border-radius: 12px; }
+.segments__item {
+  flex: 1; min-height: 44px; border: 0; border-radius: 9px; background: transparent;
+  color: var(--muted); font: 600 14px var(--font); cursor: pointer;
+}
+.segments__item[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(19, 26, 40, 0.12); }
+.segments__item:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.chart { display: block; width: 100%; height: auto; margin-top: 12px; }
+.chart__grid line { stroke: var(--border); stroke-width: 1; }
+.chart__axis { font: 10px var(--font-mono); fill: var(--muted); }
+.chart__goal { stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.chart__goal-label { font: 600 11px var(--font); fill: var(--text); }
+.chart__area { fill: var(--accent); fill-opacity: 0.12; }
+.chart__line { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.chart__dots circle { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
+.chart__last { fill: var(--accent); stroke: var(--surface); stroke-width: 2.5; }
+.chart__value { font: 600 11px var(--font-mono); fill: var(--text); }
+
+.forecast { display: flex; align-items: center; gap: 14px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+.forecast__big { flex: none; font: 700 40px/1 var(--font-brand); letter-spacing: -0.03em; }
+.forecast__big span { margin-left: 4px; font: 600 13px var(--font); letter-spacing: 0; color: var(--muted); }
+.forecast__text { min-width: 0; font-size: 13.5px; color: var(--muted); }
+.forecast__text b { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
+
+.caption--section { margin-top: 20px; }
+.workouts { display: flex; flex-direction: column; gap: 12px; }
+.workout { padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+.workout__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.workout__head b { font-size: 14.5px; font-weight: 600; }
+.workout__head .mono { font-size: 11.5px; white-space: nowrap; }
+.workout__exercise { padding: 10px 0; border-top: 1px solid var(--border); }
+.workout__head + .workout__exercise { margin-top: 8px; }
+.workout__exercise:last-of-type { padding-bottom: 0; }
+.workout__name { font-size: 13.5px; font-weight: 600; }
+.workout__sets { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; font-size: 13px; }
+.workout__note { margin-top: 10px; font-size: 12px; color: var(--muted); }

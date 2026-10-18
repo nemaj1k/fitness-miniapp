@@ -1,63 +1,34 @@
-import { useMemo, useState } from "react";
-import { ClientRow } from "./components/ClientRow.tsx";
-import { NudgeBanner } from "./components/NudgeBanner.tsx";
-import { MOCK_CLIENTS } from "./data/mockClients.ts";
-import { compareByAttention, getClientStatus, needsNudge, type ClientStatus } from "./domain/status.ts";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { MOCK_CLIENTS, MOCK_TODAY } from "./data/mockClients.ts";
+import { ClientScreen } from "./screens/ClientScreen.tsx";
+import { ClientsScreen, type Filter } from "./screens/ClientsScreen.tsx";
+import { useBackButton } from "./telegram/useBackButton.ts";
+import { hapticSelection, isInTelegram } from "./telegram/webApp.ts";
 
-type Filter = "all" | ClientStatus;
-
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: "all", label: "Все" },
-  { id: "active", label: "Активны" },
-  { id: "warning", label: "Пропуски" },
-  { id: "risk", label: "Риск" },
-];
-
+// Два экрана без роутера: список и карточка. Назад в Telegram — нативная кнопка в шапке.
 export function App() {
   const [filter, setFilter] = useState<Filter>("all");
+  // ?client=c3 сразу открывает карточку — для предпросмотра и ссылок
+  const [openedId, setOpenedId] = useState<string | null>(() => new URLSearchParams(location.search).get("client"));
+  const listScroll = useRef(0);
 
-  const sorted = useMemo(() => [...MOCK_CLIENTS].sort(compareByAttention), []);
-  const nudges = useMemo(() => sorted.filter(needsNudge), [sorted]);
+  const open = useCallback((id: string) => {
+    hapticSelection();
+    listScroll.current = window.scrollY;
+    setOpenedId(id);
+  }, []);
+  const back = useCallback(() => setOpenedId(null), []);
 
-  const counts = useMemo(() => {
-    const c: Record<Filter, number> = { all: sorted.length, active: 0, warning: 0, risk: 0 };
-    for (const client of sorted) c[getClientStatus(client)] += 1;
-    return c;
-  }, [sorted]);
+  // Карточка открывается сверху, список — там, где тренер его оставил
+  useLayoutEffect(() => {
+    window.scrollTo(0, openedId ? 0 : listScroll.current);
+  }, [openedId]);
 
-  const visible = filter === "all" ? sorted : sorted.filter((c) => getClientStatus(c) === filter);
+  const opened = openedId ? MOCK_CLIENTS.find((c) => c.id === openedId) : undefined;
+  useBackButton(opened ? back : null);
 
-  return (
-    <main className="screen">
-      <header className="topbar">
-        <span className="brand">Logbook Coach</span>
-        <span className="mono muted">тренер</span>
-      </header>
-
-      <h1 className="title">Клиенты</h1>
-
-      <div className="filters" role="group" aria-label="Фильтр по статусу">
-        {FILTERS.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            className="chip"
-            aria-pressed={filter === f.id}
-            onClick={() => setFilter(f.id)}
-          >
-            {f.label} <span className="mono">{counts[f.id]}</span>
-          </button>
-        ))}
-      </div>
-
-      <NudgeBanner clients={nudges} />
-
-      <p className="caption mono muted">Сначала те, кому нужно внимание</p>
-      <ul className="list">
-        {visible.map((client) => (
-          <ClientRow key={client.id} client={client} />
-        ))}
-      </ul>
-    </main>
-  );
+  if (opened) {
+    return <ClientScreen client={opened} today={MOCK_TODAY} onBack={isInTelegram() ? null : back} />;
+  }
+  return <ClientsScreen clients={MOCK_CLIENTS} filter={filter} onFilter={setFilter} onOpen={open} />;
 }
