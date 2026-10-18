@@ -24,7 +24,7 @@ export type Forecast =
 
 /** Сколько недель до цели при текущем темпе. Без роста прогноза нет — «stalled». */
 export function forecastToGoal(points: WeeklyPoint[], goal: number): Forecast {
-  const last = points.at(-1);
+  const last = points[points.length - 1]; // без .at(): его нет в iOS до 15.4
   if (last && last.kg >= goal) return { kind: "reached" };
   const pace = weeklyPace(points);
   if (!last || pace <= 0) return { kind: "stalled" };

@@ -59,7 +59,7 @@ function Chart({ points, goal, label }: { points: Client["weekly"][LiftId]; goal
   const line = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(2)} ${y(p.kg).toFixed(2)}`).join(" ");
   const area = `${line} L${RIGHT} ${BOTTOM} L${LEFT} ${BOTTOM} Z`;
   const first = points[0]!;
-  const last = points.at(-1)!;
+  const last = points[points.length - 1]!;
   const lastX = x(points.length - 1);
   const lastY = y(last.kg);
   const aria =

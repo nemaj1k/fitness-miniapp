@@ -85,7 +85,7 @@ interface Seed extends ClientActivity {
 }
 
 function client(seed: Seed): Client {
-  const last = (id: LiftId) => seed.weekly[id].at(-1)!.kg;
+  const last = (id: LiftId) => seed.weekly[id][seed.weekly[id].length - 1]!.kg;
   const current = { squat: last("squat"), bench: last("bench"), deadlift: last("deadlift") };
   return {
     id: seed.id,
